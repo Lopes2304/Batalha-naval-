@@ -1,13 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
     <title>Batalha Naval</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <h1>Batalha Naval</h1>
-    <h1>Batalha Naval</h1>
-    <h1>Batalha Naval</h1>
-    <h1>Batalha Naval</h1>
-    <h1>Batalha Naval</h1>
+
+    <div id="info">
+        <p>Pontos: <span id="pontos">0</span></p>
+        <p>Vidas: <span id="vidas">3</span></p>
+        <p>Jogadas: <span id="jogadas">0</span></p>
+        <p>Tempo: <span id="tempo">0</span>s</p>
+    </div>
+
+    <button onclick="novoJogo()">Novo Jogo</button>
+
+    <div id="tabuleiro"></div>
+
+    <h2 id="mensagem"></h2>
+
+    <script src="script.js"></script>
+
 </body>
 </html>

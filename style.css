@@ -1,0 +1,32 @@
+body{
+    text-align:center;
+    font-family:Arial;
+}
+
+#tabuleiro{
+    display:grid;
+    grid-template-columns:repeat(8,60px);
+    gap:5px;
+    justify-content:center;
+    margin-top:20px;
+}
+
+.celula{
+    width:60px;
+    height:60px;
+    background:#3498db;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.barco{
+    background:green;
+}
+
+.bomba{
+    background:red;
+}
+
+.agua{
+    background:white;
+}
