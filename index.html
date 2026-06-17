@@ -2,27 +2,52 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Batalha Naval</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Fundo Pirata</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+</html><!-- Tela 1: Login -->
+<div id="tela-login" class="tela">
+<h1>Batalha Naval</h1>
+<input type="text" id="nomeUsuario" placeholder="Digite seu nome">
 
-    <h1>Batalha Naval</h1>
+<button onclick="iniciarJogo()">JOGAR</button>
 
-    <div id="info">
-        <p>Pontos: <span id="pontos">0</span></p>
-        <p>Vidas: <span id="vidas">3</span></p>
-        <p>Jogadas: <span id="jogadas">0</span></p>
-        <p>Tempo: <span id="tempo">0</span>s</p>
-    </div>
+</div>
+<!-- Tela 2: Jogo -->
+<div id="tela-jogo" class="tela" style="display: none;">
+<h2>Boa sorte, <span id="displayNome"></span>!</h2>
+<div id="grid-batalha">
+<!-- O tabuleiro será gerado via JS ou aqui -->
+<table>
+<tr> <td></td><td></td><td></td> </tr>
+<tr> <td></td><td></td><td></td> </tr>
+</table>
+</div>
+</div>
+<script>
+function iniciarJogo() {
+const nome = document.getElementById('nomeUsuario').value;
+if(nome) {
+document.getElementById('tela-login').style.display =
 
-    <button onclick="novoJogo()">Novo Jogo</button>
+'none';
 
-    <div id="tabuleiro"></div>
+document.getElementById('tela-jogo').style.display =
 
-    <h2 id="mensagem"></h2>
+'block';
 
-    <script src="script.js"></script>
+document.getElementById('displayNome').innerText =
 
+nome;
+
+}
+}
+</script>
+
+
+
+<script src="script.js"></script>
 </body>
 </html>

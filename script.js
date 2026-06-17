@@ -1,154 +1,81 @@
-let tabuleiro = [];
-let pontos = 0;
-let vidas = 3;
-let jogadas = 0;
-let barcosEncontrados = 0;
-let totalBarcos = 10;
+function entrarNoJogo() {
+    let nome = document.getElementById("nomeUsuario").value;
 
-/* esse codigo eu faço a matriz aleatoria */
-
-function criarMatriz(){
-
-    tabuleiro = [];
-
-    for(let i=0;i<8;i++){
-
-        let linha=[];
-
-        for(let j=0;j<8;j++){
-
-            let sorteio=Math.random(); /* Cada posição recebe aleatoriamente barco, bomba ou água através do Math.random().*/
-
-            if(sorteio < 0.15){
-                linha.push("barco");
-            }
-            else if(sorteio < 0.25){
-                linha.push("bomba");
-            }
-            else{
-                linha.push("agua");
-            }
-
-        }
-
-        tabuleiro.push(linha);
-    }
-}
-
-/*esse daqui desenha o tabuleiro */
-
-function desenharTabuleiro(){
-
-    const area = document.getElementById("tabuleiro");
-
-    area.innerHTML="";
-
-    for(let i=0;i<8;i++){
-
-        for(let j=0;j<8;j++){
-
-            let div=document.createElement("div");
-
-            div.classList.add("celula");
-
-            div.dataset.linha=i;
-            div.dataset.coluna=j;
-
-            div.addEventListener("click", clicarCelula);
-
-            area.appendChild(div);
-        }
-    }
-}
-
-/* esse é para o clicle na coluna */
-
-function clicarCelula(){
-
-    if(this.classList.contains("revelado")){
+    if(nome.trim() === "") {
+        alert("Digite seu nome!");
         return;
     }
 
-    this.classList.add("revelado");
+    localStorage.setItem("nomeUsuario", nome);
 
-    let linha=this.dataset.linha;
-    let coluna=this.dataset.coluna;
+    document.body.style.opacity = "0";
 
-    let valor=tabuleiro[linha][coluna];
+    setTimeout(() => {
+        window.location.href = "jogo.html";
+    }, 1000);
+}
 
-    jogadas++;
+function criartabela() {
+  const tabela = document.createElement('table');
+  const cenario = document.getElementById('tabuleiro-jogo');
+  let contador = 0;
 
-    if(valor==="barco"){
-        pontos+=10;
-        barcosEncontrados++;
-        this.classList.add("barco");
-        this.innerHTML="🚢";
+  for (let i = 0; i < 10; i++) {
+    const linha = document.createElement('tr');
+    tabela.appendChild(linha);
+
+    for (let j = 0; j < 10; j++) {
+      const celula = document.createElement('td');
+      linha.appendChild(celula);
+
+      const imgSegunda = document.createElement('img');
+      imgSegunda.src = galeria[contador];
+      contador += 1;
+      imgSegunda.classList.add('tile-tras', 'oculto');
+      celula.appendChild(imgSegunda);
+
+      const imgPrimeira = document.createElement('img');
+      imgPrimeira.src = 'img/Fire-icon.png';
+      imgPrimeira.id = `${i}-${j}`;
+      imgPrimeira.classList.add('tile-frente');
+      imgPrimeira.addEventListener('click', () => {
+        imgPrimeira.classList.add('oculto');
+        imgSegunda.classList.remove('oculto');
+
+        let id = document.getElementById("jogadas");
+        contador_jogadas+= 1;
+        id_botao = document.getElementById("btn-resetar");
+        id.innerText = "Jogadas: "+ contador_jogadas;
+        id_botao.addEventListener('click', () =>{
+          contador_jogadas = 0
+          id.innerText = "Jogadas: "+ contador_jogadas;
+        })
+      });
+      celula.appendChild(imgPrimeira);
     }
+  }
 
-    else if(valor==="bomba"){
-        vidas--;
-        this.classList.add("bomba");
-        this.innerHTML="💣";
-    }
-
-    else{
-        this.classList.add("agua");
-        this.innerHTML="🌊";
-    }
-
-    atualizarTela();
-    verificarFim();
+  cenario.appendChild(tabela);
 }
 
 
-/* esse atualiza informações */
-
-function atualizarTela(){
-
-    document.getElementById("pontos").innerText=pontos;
-    document.getElementById("vidas").innerText=vidas;
-    document.getElementById("jogadas").innerText=jogadas;
-}
-
-/* esse faiz as vitorias e as derrotas */
-
-function verificarFim(){
-
-    if(vidas <= 0){
-
-        document.getElementById("mensagem").innerText =
-        "Você perdeu!";
-
-    }
-
-    if(barcosEncontrados >= totalBarcos){
-
-        document.getElementById("mensagem").innerText =
-        "Você venceu!";
-    }
-}
 
 
-/* esse faiz um novo jogo */
 
 
-function novoJogo(){
 
-    pontos=0;
-    vidas=3;
-    jogadas=0;
-    barcosEncontrados=0;
 
-    criarMatriz();
-    desenharTabuleiro();
-    atualizarTela();
 
-    document.getElementById("mensagem").innerText="";
-}
 
-/* inicia jogo */
 
-novoJogo();
+
+
+
+
+
+
+
+
 
 
 
