@@ -3,51 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tela de Fundo Pirata</title>
+    <title>Batalha Naval</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-</html><!-- Tela 1: Login -->
-<div id="tela-login" class="tela">
-<h1>Batalha Naval</h1>
-<input type="text" id="nomeUsuario" placeholder="Digite seu nome">
 
-<button onclick="iniciarJogo()">JOGAR</button>
+    <!-- Tela Login -->
+    <div id="tela-login" class="tela">
+        <h1>Batalha Naval</h1>
 
-</div>
-<!-- Tela 2: Jogo -->
-<div id="tela-jogo" class="tela" style="display: none;">
-<h2>Boa sorte, <span id="displayNome"></span>!</h2>
-<div id="grid-batalha">
-<!-- O tabuleiro será gerado via JS ou aqui -->
-<table>
-<tr> <td></td><td></td><td></td> </tr>
-<tr> <td></td><td></td><td></td> </tr>
-</table>
-</div>
-</div>
-<script>
-function iniciarJogo() {
-const nome = document.getElementById('nomeUsuario').value;
-if(nome) {
-document.getElementById('tela-login').style.display =
+        <input type="text" id="nomeUsuario" placeholder="Digite seu nome">
 
-'none';
+        <button onclick="iniciarJogo()">JOGAR</button>
+    </div>
 
-document.getElementById('tela-jogo').style.display =
+    <!-- Tela Jogo -->
+    <div id="tela-jogo" class="tela" style="display:none;">
 
-'block';
+        <div class="container-jogo">
 
-document.getElementById('displayNome').innerText =
+            <div class="painel-info">
+                <h2>Boa sorte, <span id="displayNome"></span>!</h2>
 
-nome;
+                <p id="jogadas">Jogadas: 0</p>
 
-}
-}
-</script>
+                <button id="btn-resetar">Reiniciar</button>
+            </div>
 
+            <div id="grid-batalha">
+                <table id="tabuleiro"></table>
+            </div>
 
+        </div>
 
-<script src="script.js"></script>
+    </div>
+
+    <script>
+        function iniciarJogo() {
+
+            const nome = document.getElementById('nomeUsuario').value;
+
+            if(nome){
+
+                document.getElementById('tela-login').style.display = 'none';
+
+                document.getElementById('tela-jogo').style.display = 'block';
+
+                document.getElementById('displayNome').innerText = nome;
+
+                criarTabuleiro();
+            }
+        }
+    </script>
+
+    <script src="script.js"></script>
+
 </body>
 </html>

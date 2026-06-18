@@ -1,3 +1,5 @@
+let contador_jogadas = 0;
+
 function entrarNoJogo() {
     let nome = document.getElementById("nomeUsuario").value;
 
@@ -7,75 +9,45 @@ function entrarNoJogo() {
     }
 
     localStorage.setItem("nomeUsuario", nome);
-
-    document.body.style.opacity = "0";
-
-    setTimeout(() => {
-        window.location.href = "jogo.html";
-    }, 1000);
 }
 
-function criartabela() {
-  const tabela = document.createElement('table');
-  const cenario = document.getElementById('tabuleiro-jogo');
-  let contador = 0;
+function criarTabuleiro() {
 
-  for (let i = 0; i < 10; i++) {
-    const linha = document.createElement('tr');
-    tabela.appendChild(linha);
+    const tabela = document.getElementById("tabuleiro");
 
-    for (let j = 0; j < 10; j++) {
-      const celula = document.createElement('td');
-      linha.appendChild(celula);
+    tabela.innerHTML = "";
 
-      const imgSegunda = document.createElement('img');
-      imgSegunda.src = galeria[contador];
-      contador += 1;
-      imgSegunda.classList.add('tile-tras', 'oculto');
-      celula.appendChild(imgSegunda);
+    for(let i = 0; i < 10; i++){
 
-      const imgPrimeira = document.createElement('img');
-      imgPrimeira.src = 'img/Fire-icon.png';
-      imgPrimeira.id = `${i}-${j}`;
-      imgPrimeira.classList.add('tile-frente');
-      imgPrimeira.addEventListener('click', () => {
-        imgPrimeira.classList.add('oculto');
-        imgSegunda.classList.remove('oculto');
+        const linha = document.createElement("tr");
 
-        let id = document.getElementById("jogadas");
-        contador_jogadas+= 1;
-        id_botao = document.getElementById("btn-resetar");
-        id.innerText = "Jogadas: "+ contador_jogadas;
-        id_botao.addEventListener('click', () =>{
-          contador_jogadas = 0
-          id.innerText = "Jogadas: "+ contador_jogadas;
-        })
-      });
-      celula.appendChild(imgPrimeira);
+        for(let j = 0; j < 10; j++){
+
+            const celula = document.createElement("td");
+
+            celula.addEventListener("click", function(){
+
+                if(celula.classList.contains("clicado")) return;
+
+                celula.classList.add("clicado");
+
+                contador_jogadas++;
+
+                document.getElementById("jogadas").innerText =
+                "Jogadas: " + contador_jogadas;
+            });
+
+            linha.appendChild(celula);
+        }
+
+        tabela.appendChild(linha);
     }
-  }
 
-  cenario.appendChild(tabela);
+    document.getElementById("btn-resetar").onclick = function(){
+        contador_jogadas = 0;
+        document.getElementById("jogadas").innerText =
+        "Jogadas: 0";
+
+        criarTabuleiro();
+    };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
