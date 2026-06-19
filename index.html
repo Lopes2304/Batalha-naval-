@@ -2,61 +2,130 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Batalha Naval</title>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Tela Login -->
     <div id="tela-login" class="tela">
-        <h1>Batalha Naval</h1>
+
+        <h1>⚓ Batalha Naval ⚓</h1>
 
         <input type="text" id="nomeUsuario" placeholder="Digite seu nome">
 
+        <br><br>
+
+        <select id="nivel" required>
+            <option value="" disabled selected hidden>⚙️ Escolher Nível</option>
+            <option value="facil">☁️ Fácil</option>
+            <option value="medio">🌊 Médio</option>
+            <option value="dificil">🔥 Difícil</option>
+        </select>
+
+        <br><br>
+
         <button onclick="iniciarJogo()">JOGAR</button>
+
     </div>
 
-    <!-- Tela Jogo -->
     <div id="tela-jogo" class="tela" style="display:none;">
 
         <div class="container-jogo">
 
             <div class="painel-info">
+
                 <h2>Boa sorte, <span id="displayNome"></span>!</h2>
 
-                <p id="jogadas">Jogadas: 0</p>
+                <p id="jogadas">🎯 Jogadas: 0</p>
+                
+                <p id="barcos">🚢 Barcos restantes: 30</p>
 
-                <button id="btn-resetar">Reiniciar</button>
+                <div id="container-vidas">
+                    Vidas: <span id="vidas">❤️ ❤️ ❤️ ❤️ ❤️</span>
+                </div>
+
+                <div class="area-botoes">
+                    <button id="btn-comecar" onclick="comecarPartida()">COMEÇAR</button>
+
+                    <button id="btn-resetar" onclick="reiniciarJogo()">REINICIAR</button>
+                </div>
+
+                <div class="secao-ranking">
+                <h3>🏆 Ranking Top 3</h3>
+                    <ul id="ranking"></ul>
+                </div>
+
             </div>
 
             <div id="grid-batalha">
+
+                <div id="painel-superior">
+                    <div id="caixa-tempo">
+                        <p id="tempo">⏰ 5:00</p>
+                    </div>
+                </div>
+
                 <table id="tabuleiro"></table>
+
             </div>
 
         </div>
 
     </div>
 
-    <script>
-        function iniciarJogo() {
+    <div id="modalHistorico" class="modal-historico" style="display: none;">
+        <div class="conteudo-historico">
+            <h2>📜 Histórico de Partidas</h2>
 
-            const nome = document.getElementById('nomeUsuario').value;
+            <ul id="listaHistorico"></ul>
 
-            if(nome){
+            <button onclick="limparHistorico()">🧹 Limpar histórico</button>
+            
+            <button onclick="fecharHistorico()">Fechar</button>
+        </div>
+    </div>
 
-                document.getElementById('tela-login').style.display = 'none';
+    <div id="modalHistorico" class="modal-historico" style="display: none;">
+        <div class="conteudo-historico">
+            <h2>📜 Histórico & Ranking</h2>
+            <div class="cabecalho-historico">
+                <span>Jogador</span>
+                <span>Nível</span>
+                <span>Pontos</span>
+                <span>Data/Hora</span>
+            </div>
 
-                document.getElementById('tela-jogo').style.display = 'block';
+            <ul id="listaHistorico"></ul>
+            <ul id="listaHistorico"></ul>
+            <button onclick="limparHistorico()">🧹 Limpar histórico</button>
+            <button onclick="fecharHistorico()">Fechar</button>
+        </div>
+    </div>
+       <button id="btn-menu" onclick="alternarMenu()">☰</button>
 
-                document.getElementById('displayNome').innerText = nome;
+    <div id="sidebar" class="sidebar">
+        <h2>⚓ Menu</h2>
+        <hr>
+        <button onclick="abrirHistorico()">📜 Histórico & Ranking</button>
+        <button onclick="alternarSom()">🎵 Sons: LIGADO</button>
+    </div>
 
-                criarTabuleiro();
-            }
-        }
-    </script>
+<div id="modalAviso" class="modal-aviso" style="display: none;">
+        <div id="conteudoAviso" class="conteudo-aviso">
+            <div id="espaco-imagem-aviso"></div>
+            
+            <h2 id="textoAviso">Mensagem do Jogo</h2>
+            
+            <button id="btn-ok-aviso" onclick="fecharAvisoCustomizado()">OK</button>
+        </div>
+    </div> 
 
     <script src="script.js"></script>
+    
 
 </body>
 </html>

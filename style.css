@@ -1,68 +1,396 @@
-body{
-    margin:0;
-    padding:0;
-    background-image:url('fundo.png');
-    background-size:cover;
-    background-position:center;
-    background-repeat:no-repeat;
-    background-attachment:fixed;
-    background-color:#000;
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('fundo.png');
+    background-size: cover;        /* // Garante que a imagem estique para cobrir a tela sem distorcer */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;  /* // Efeito Parallax: o fundo fica travado enquanto o conteúdo rola */
+    background-color: #000;
 
-    color:white;
-    font-family:Arial, sans-serif;
+    color: white;
+    font-family: Arial, sans-serif;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    /* // Alinhamento Flexbox: centraliza o jogo inteiro na tela (vertical e horizontal) */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    min-height:100vh;
+    min-height: 100vh;             /* // Força o body a ter no mínimo a altura total da tela do navegador */
 }
 
-.tela{
-    background:rgba(0,0,0,0.7);
-    padding:40px;
-    border-radius:15px;
-    border:2px solid #8b4513;
+.tela {
+    background: rgba(0, 0, 0, 0.75); /* // O 'rgba' aplica cor preta com 75% de opacidade (transparência) */
+    padding: 40px;
+    border-radius: 15px;
+    border: 2px solid #8b4513;
 }
 
-input{
-    padding:10px;
-    margin:10px;
-    border:none;
-    border-radius:5px;
+/* LOGIN */
+
+input,
+select {
+    width: 250px;
+    padding: 12px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
 }
 
-button{
-    padding:10px 20px;
-    background:#8b4513;
-    color:white;
-    border:none;
-    cursor:pointer;
-    font-weight:bold;
+button {
+    padding: 10px 20px;
+    background: #8b4513;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: 0.3s;              /* // Suaviza a mudança de cor e tamanho quando o mouse passa */
 }
 
-.container-jogo{
-    display:flex;
-    align-items:center;
-    gap:120px;
+button:hover {
+    background: #a0522d;
+    transform: scale(1.05);        /* // Efeito Grow: aumenta o botão em 5% ao passar o mouse */
 }
 
-.painel-info{
-    width:250px;
-    text-align:left;
+/* ÁREA PRINCIPAL */
+
+/* Procure por .container-jogo e mude para este: */
+.container-jogo {
+    display: flex;                 
+    align-items: stretch;          /* Força os filhos directos a terem a mesma altura */
+    justify-content: center;
+    gap: 80px;                     
 }
 
-#grid-batalha{
-    margin-left:80px;
+/* Procure por .painel-info e garanta que está assim, adicionando flex-grow: */
+.painel-info {
+    width: 300px;
+    display: flex;
+    flex-direction: column;        
+    align-items: flex-start;       
+    text-align: left;              
+    padding-left: 20px;            
+    flex-grow: 1;                  /* Faz o painel crescer verticalmente preenchendo o espaço */
 }
 
-#tabuleiro{
-    border-collapse:collapse;
+/* Garanta que a .area-botoes mantenha a margem automática no topo */
+
+
+.painel-info h2 {
+    margin-bottom: 20px;
+    align-self: center;            /* // Mantém apenas o título principal centralizado no painel */
 }
 
-#tabuleiro td{
-    width:45px;
-    height:45px;
-    border:1px solid white;
-    background:rgba(255,255,255,0.2);
+.secao-ranking {
+    align-self: flex-start;        
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 50px;           /* Adicione esta linha para criar uma distância empurrando os botões */
+}
+
+#ranking {
+    list-style: none;              /* // Remove as bolinhas da lista */
+    padding: 0;                    /* // Remove o recuo padrão da lista */
+    margin: 10px 0 0 0;
+    text-align: left;              /* // Garante o texto alinhado à esquerda */
+}
+
+/* BOTÕES */
+
+.area-botoes {
+    margin-top: auto;              /* Empurra o bloco inteiro para a extremidade inferior */
+    padding-top: 30px;             
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-self: center;            
+}
+
+#btn-comecar,
+#btn-reiniciar {                   /* // CORRIGIDO: De #btn-resetar para #btn-reiniciar */
+    width: 220px;
+    height: 55px;
+    font-size: 20px;
+}
+
+/* TABULEIRO */
+
+#grid-batalha {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* CRONÔMETRO */
+
+#painel-superior {
+    margin-bottom: 25px;
+}
+
+#caixa-tempo {
+    width: 220px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 3px solid orange;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.7); /* // Cria o efeito de brilho Neon (luz espalhada) */
+}
+
+#tempo {
+    margin: 0;
+    font-size: 34px;
+    font-weight: bold;
+    color: white;
+}
+
+/* INFORMAÇÕES */
+
+#jogadas,
+#barcos {
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+/* TABELA (UNIFICADO) */
+
+#tabuleiro {
+    border-collapse: collapse;     /* // Elimina o espaço padrão entre as células */
+    border-radius: 12px;           /* // Define as bordas arredondadas do tabuleiro */
+    overflow: hidden;              /* // Garante que as células sigam o arredondamento */
+}
+
+#tabuleiro td {
+    width: 45px;
+    height: 45px;
+    border: 1px solid white;
+    background: rgba(255, 255, 255, 0.2);
+    text-align: center;
+    vertical-align: middle;        /* // Centraliza o conteúdo da célula perfeitamente na vertical */
+    transition: 0.2s;
+}
+
+#tabuleiro td:hover {
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+}
+
+#tabuleiro img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;           /* // Impede que a foto do barco fique achatada */
+}
+
+/* SISTEMA DE VIDAS */
+
+#container-vidas {
+    font-size: 22px;
+    margin: 15px 0;
+    font-weight: bold;
+    letter-spacing: 2px;           /* // Aumenta o espaço horizontal entre um emoji de coração e outro */
+}
+
+/* MODAL DE HISTÓRICO */
+
+.modal-historico {
+    display: none;                 /* // Começa oculto; o JavaScript altera para 'flex' para exibir */
+    position: fixed;               /* // Trava o componente na tela, ignorando a rolagem da página */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85); /* // Fundo ligeiramente mais escuro para focar no histórico */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.conteudo-historico {
+    background: #111;
+    padding: 30px;
+    border-radius: 12px;
+    width: 650px;                  /* // Espaço ideal para caber as colunas lado a lado */
+    max-height: 80vh;              /* // Define uma altura máxima limite */
+    overflow-y: auto;              /* // Adiciona barra de rolagem caso tenha muitas partidas */
+    color: white;
+    border: 2px solid #00ffcc;
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+}
+
+.conteudo-historico h2 {
+    text-align: center;
+}
+
+/* Alinhamento dos títulos das colunas */
+.cabecalho-historico {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    color: #00ffcc;
+    padding: 10px 5px;
+    border-bottom: 2px solid #00ffcc;
+    margin-top: 20px;
+}
+
+/* Garante larguras proporcionais para cada coluna ficar alinhada */
+.cabecalho-historico span, 
+#listaHistorico li span {
+    width: 25%;
+    text-align: center;
+}
+
+/* Alinha o nome do jogador para a esquerda para ficar mais bonito */
+.cabecalho-historico span:first-child, 
+#listaHistorico li span:first-child {
+    text-align: left;
+}
+
+#listaHistorico {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+/* Cada linha do histórico se comporta como uma linha de tabela flexível */
+#listaHistorico li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 5px;
+    border-bottom: 1px solid #333;
+    font-size: 15px;
+}
+
+/* Organização dos botões inferiores */
+.botoes-historico {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.conteudo-historico button {
+    width: 50%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+}
+
+.btn-limpar { background: #8b0000; color: white; }
+.btn-limpar:hover { background: #ff0000; }
+.btn-fechar { background: #333; color: white; }
+.btn-fechar:hover { background: #555; }
+
+/* =========================================================================
+   ☰ CSS DA BARRA LATERAL (SIDEBAR RETRÁTIL)
+   ========================================================================= */
+
+#btn-menu {
+    position: fixed;               /* // Deixa o botão fixo na tela */
+    top: 20px;
+    left: 20px;
+    z-index: 1000;                 /* // Garante que o botão fique em cima de absolutamente tudo */
+    font-size: 24px;
+    padding: 10px 15px;
+    background: #8b4513;
+    border-radius: 5px;
+}
+
+.sidebar {
+    position: fixed;               /* // Fixa a barra na tela sem empurrar o tabuleiro */
+    top: 0;
+    left: -280px;                  /* // Começa escondida na esquerda */
+    width: 250px;                  
+    height: 100%;                  /* // Ocupa a altura inteira da tela */
+    background: rgba(15, 15, 15, 0.95); 
+    padding: 80px 20px 20px 20px;  
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 999;                  
+    transition: 0.4s ease;         
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sidebar.aberto {
+    left: 0;                       /* // Faz a barra deslizar para dentro da tela */
+}
+
+.sidebar button {
+    width: 100%;
+    text-align: left;              
+    padding: 12px 15px;
+    font-size: 16px;
+    background: transparent;       
+    border-bottom: 1px solid #333;
+    border-radius: 0;
+}
+
+.sidebar button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: none;               
+}
+
+/* =========================================================================
+   🚨 CSS DA CAIXA DE AVISOS INTERNA DO JOGO
+   ========================================================================= */
+
+.modal-aviso {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85); 
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;                   /* // Fica acima de tudo para travar a tela */
+}
+
+.conteudo-aviso {
+    background: #151515;
+    padding: 40px;
+    border-radius: 15px;
+    border: 3px solid #8b4513;       
+    width: 450px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+    transition: 0.3s;
+}
+
+.conteudo-aviso h2 {
+    font-size: 24px;
+    margin-bottom: 25px;
+    color: white;
+}
+
+#btn-ok-aviso {
+    width: 150px;
+    height: 45px;
+    font-size: 18px;
+    background: #8b4513;
+}
+
+/* 🟥 ESTILO ESPECIAL PARA O GAME OVER SANGRENTO */
+.conteudo-aviso.modo-gameover {
+    border: 4px solid #cc0000;       
+    background: #0a0000;             
+    box-shadow: 0 0 35px rgba(204, 0, 0, 0.5); 
+}
+
+.conteudo-aviso.modo-gameover h2 {
+    font-size: 40px;                 
+    color: #ff0000;                  
+    text-shadow: 2px 2px 5px black;
+    font-family: 'Impact', sans-serif;
+}
+
+.conteudo-aviso.modo-gameover button {
+    background: #cc0000;
+}
+
+.conteudo-aviso.modo-gameover button:hover {
+    background: #ff0000;
 }
