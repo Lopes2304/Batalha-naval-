@@ -83,7 +83,6 @@ function criarTabuleiro() {
 // =========================================================================
 
 function verificarRadar(linha, coluna) {
-    // Lista as 4 posições vizinhas (Cima, Baixo, Esquerda, Direita)
     const vizinhos = [
         { l: linha - 1, c: coluna },
         { l: linha + 1, c: coluna },
@@ -92,10 +91,8 @@ function verificarRadar(linha, coluna) {
     ];
 
     for (let v of vizinhos) {
-        // Garante que o vizinho está dentro dos limites da matriz 10x10
         if (v.l >= 0 && v.l < 10 && v.c >= 0 && v.c < 10) {
             const valorVizinho = matriz[v.l][v.c];
-            // Se começar com 'B' e não for "bomba", achou um pedaço de navio!
             if (valorVizinho.startsWith("B") && valorVizinho !== "bomba") {
                 return true;
             }
@@ -126,16 +123,13 @@ function clicarCelula() {
 
     const valor = matriz[linha][coluna]; 
 
-    // Verifica se acertou um Navio (Se começar com "B" e não for bomba)
-    // Verifica se acertou um Navio (Se começar com "B" e não for bomba)
+    // Verifica se acertou um Navio
     if(valor.startsWith("B") && valor !== "bomba") {
-        // // MUDOU AQUI: Agora toca o som de vitória (sucesso) ao achar o barco!
         if (somVitoria) {
             somVitoria.currentTime = 0;
-            somVitoria.play();
+            somVitoria.play().catch(() => {});
         }
 
-        // Escolhe o desenho do barco baseado no ID do navio
         let numeroNavio = parseInt(valor.replace("B", ""));
         let tipoImagem = (numeroNavio % 3) + 1; 
         this.innerHTML = `<img src="imagens/barco${tipoImagem}.png" width="45">`; 
@@ -143,37 +137,49 @@ function clicarCelula() {
         barcosRestantes--; 
         integridadeNavios[valor]--; 
 
-        // Se o navio inteiro afundou, você pode deixar um aviso na tela ou um som extra
+        // SISTEMA DE GANHAR VIDAS: Recupera 1 vida encontrando parte do barco
+        if (vidasAtuais < 20) {
+            vidasAtuais += 1;
+            atualizarInterfaceVidas();
+        }
+
+        // Se o navio inteiro afundou (Bônus de +3 vidas)
         if (integridadeNavios[valor] === 0) {
+            if (vidasAtuais < 20) {
+                vidasAtuais += 3;
+                if (vidasAtuais > 20) vidasAtuais = 20;
+                atualizarInterfaceVidas();
+            }
             setTimeout(() => {
-                mostrarAvisoCustomizado("⚓ CAPITÃO! Um navio inteiro foi completamente destruído!", "normal");
+                mostrarAvisoCustomizado("⚓ CAPITÃO! Um navio inteiro foi destruído! +3 Vidas!", "normal");
             }, 200);
         }
     }
     else if(valor === "bomba") {
-        // // MANTÉM AQUI: A bomba do tabuleiro (que tira vida) continua com o som de explosão
         if (somExplosao) {
             somExplosao.currentTime = 0;
-            somExplosao.play();
+            somExplosao.play().catch(() => {});
         }
 
         this.innerHTML = '<img src="imagens/bomba.png" width="45">'; 
         
+        // SISTEMA DE PERDER VIDAS: Bomba tira 2 vidas de uma vez
         if (vidasAtuais > 0) {
-            vidasAtuais--; 
+            vidasAtuais -= 2; 
+            if (vidasAtuais < 0) vidasAtuais = 0;
             atualizarInterfaceVidas(); 
         }
     }
     else {
         // Jogador errou e bateu na água
-        somAgua.currentTime = 0;
-        somAgua.play();
+        if (somAgua) {
+            somAgua.currentTime = 0;
+            somAgua.play().catch(() => {});
+        }
 
-        // Aciona o sensor de Radar
         if (verificarRadar(linha, coluna)) {
-            // Se o radar detectar navios próximos, pinta com uma onda vermelha/alerta ou efeito visual
             this.innerHTML = '<img src="imagens/onda.png" width="45">';
-            this.style.backgroundColor = "rgba(255, 165, 0, 0.4)"; // Fundo laranja para indicar proximidade
+            this.style.backgroundColor = "rgba(255, 165, 0, 0.4)"; 
         } else {
             this.innerHTML = '<img src="imagens/onda.png" width="45">'; 
         }
@@ -195,27 +201,26 @@ function clicarCelula() {
         mostrarAvisoCustomizado("💥 GAME OVER! Você perdeu todas as vidas.", "gameover"); 
     }
 }
+
 function atualizarInterfaceVidas() {
     const elementoVidas = document.getElementById("vidas"); 
     let coracoesHTML = ""; 
     
-    // // MUDOU AQUI: Agora renderiza a imagem do coração realista para as vidas ativas
-    for (let i = 1; i <= 20; i++) { // Aumentei o limite aqui para aguentar mais corações na tela
-        if (i <= vidasAtuais) {
-            coracoesHTML += '<img src="imagens/coracao_realista.png" width="25" style="margin-right: 5px;">'; 
+    // Renderiza a imagem do seu coração animado (coracao.gif)
+    for (let i = 1; i <= vidasAtuais; i++) {
+        if (i <= 10) { // Mostra no máximo 10 corações enfileirados para não quebrar o layout
+            coracoesHTML += '<img src="imagens/coracao.gif" width="28" style="margin-right: 3px; vertical-align: middle;">'; 
         }
     }
     
-    // Se o jogador estiver com muitas vidas, para não quebrar o layout, podemos colocar um texto se passar de 10 vidas:
     if (vidasAtuais > 10) {
-        elementoVidas.innerHTML = `<img src="imagens/coracao_realista.png" width="25"> x${vidasAtuais}`;
+        elementoVidas.innerHTML = `<img src="imagens/coracao.gif" width="28" style="vertical-align: middle;"> x${vidasAtuais}`;
     } else if (vidasAtuais === 0) {
         elementoVidas.innerHTML = "🖤 SEM VIDAS";
     } else {
         elementoVidas.innerHTML = coracoesHTML; 
     }
 }
-
 
 // =========================================================================
 // ⏱️ SISTEMA DE RELÓGIO E TEMPO
@@ -229,7 +234,7 @@ function formatarTempo(segundos){
 
 function iniciarCronometro(segundos){
     tempoRestante = segundos; 
-    avisoTempoDisparado = false; // Reseta o controle do alerta
+    avisoTempoDisparado = false; 
     document.getElementById("tempo").innerText = "⏰ " + formatarTempo(tempoRestante); 
     clearInterval(cronometro); 
 
@@ -237,13 +242,11 @@ function iniciarCronometro(segundos){
         tempoRestante--; 
         document.getElementById("tempo").innerText = "⏰ " + formatarTempo(tempoRestante); 
 
-        // CRÍTICO: Avisa quando faltarem 10 segundos sem cobrir a tela com estilo Game Over
         if (tempoRestante === 10 && !avisoTempoDisparado) {
             avisoTempoDisparado = true;
             mostrarAvisoCustomizado("⚠️ CAPITÃO!\nO tempo está acabando! Você tem apenas 10 segundos!", "normal");
         }
 
-        // VERIFICAÇÃO DE DERROTA POR TEMPO
         if(tempoRestante <= 0){
             clearInterval(cronometro); 
             salvarJogada("Derrota (Tempo)"); 
@@ -262,15 +265,6 @@ function iniciarJogo(){
     if(nome === ""){
         mostrarAvisoCustomizado("Digite seu nome!", "normal");
         return;
-    }
-    // // CÓDIGO NOVO: Inicializa os sons após o clique do jogador para destravar o navegador
-  // // CÓDIGO PROTEGIDO: Tenta carregar os sons, se falhar, não quebra o botão de jogar!
-    try {
-        somExplosao = new Audio('explosao.mp3');
-        somAgua = new Audio('agua.mp3');
-        somVitoria = new Audio('vitoria.mp3');
-    } catch (erro) {
-        console.log("Os sons não puderam ser carregados, mas o jogo vai continuar:", erro);
     }
 
     const nivel = document.getElementById("nivel").value; 
@@ -465,11 +459,11 @@ function mostrarAvisoCustomizado(mensagem, tipo) {
     caixa.classList.remove("modo-gameover");
     espacoImagem.innerHTML = "";
     
-    texto.innerText = mensagem;
+    texto.innerText = message = mensagem;
 
     if (tipo === "gameover") {
         caixa.classList.add("modo-gameover");
-        espacoImagem.innerHTML = '<img src="imagens/coracao_realista.png" width="120" style="margin-bottom: 20px; animation: pulse 1s infinite;">';
+        espacoImagem.innerHTML = '<img src="imagens/coracao.gif" width="120" style="margin-bottom: 20px;">';
     }
 
     modal.style.display = "flex";
